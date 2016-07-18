@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head> 
+		<meta charset="utf-8"> 
+		<title>iFrame Resize Test</title> 
+		<meta name="description" content="iFrame message passing test"> 
+		<meta name="viewport" content="width=device-width">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<style>
+			body {
+				font-family: arial, helvetica, sans-serif;
+				background-color: #f1f1f1;
+			}
+			h2, #callback {
+				margin-left: 20px;
+			}
+		</style>
+	</head> 
+	<body> 
+
+		<!-- PROJECTS TO TEST (Add These to the iFrame Src) -->
+		<!-- EMS-Interactive-Production/electro-magnetic-spectrum-intro.html -->
+
+		<h2>iFrame Resize Tester</h2>
+		<div style="margin:20px;">
+			<iframe src="https://helios.flipswitch.com/CourseContent/pages/2015/p395c16enlightenment_influences.html?playerCss=siteTheme_flipswitch" scrolling="no" frameborder='0' width="100%"></iframe>
+			<!-- Here's Base.ppt Which is Specifically for PowerPoints: <script type="text/javascript" src="https://courseplayer.avalearning.com/nweb/js/base-ppt.js"></script> -->
+			<!-- IFramed Content Must Have This Script Attached: <script type="text/javascript" src="../js/iframeResizer.contentWindow.min.js"></script> -->
+		</div>
+
+		<p id="callback"></p>
+
+		<!-- Scripts Placed Below -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iframe-resizer/3.5.5/iframeResizer.min.js"></script>
+		<script type="text/javascript">
+			// Use heightCalculationMethod for all Projects with Absolute Positioning...
+			var isOldIE = (navigator.userAgent.indexOf("MSIE") !== -1); // Detect IE10 and below
+			iFrameResize({
+				log                      : true,                 			 // Enable console logging
+				autoResize               : true,                  			 // Enable auto resizing
+				heightCalculationMethod: isOldIE ? 'max' : 'documentElementOffset',  // Enables Absolute Positioning
+				enablePublicMethods      : true,                  			 // Enable methods within iframe hosted page
+				resizedCallback          : function(messageData){ 			 // Callback fn when resize is received
+					$('p#callback').html(
+						'<b>Frame ID:</b> '    + messageData.iframe.id +
+						' <b>Height:</b> '     + messageData.height +
+						' <b>Width:</b> '      + messageData.width + 
+						' <b>Event type:</b> ' + messageData.type
+					);
+				},
+				messageCallback         : function(messageData){ // Callback fn when message is received
+					$('p#callback').html(
+						'<b>Frame ID:</b> '    + messageData.iframe.id +
+						' <b>Message:</b> '    + messageData.message
+					);
+					alert(messageData.message);
+				},
+				closedCallback         : function(id){ // Callback fn when iFrame is closed
+					$('p#callback').html(
+						'<b>IFrame (</b>'    + id +
+						'<b>) removed from page.</b>'
+					);
+				}
+			});
+
+		</script>
+	</body> 
+</html>
